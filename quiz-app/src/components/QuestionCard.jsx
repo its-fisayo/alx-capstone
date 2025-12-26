@@ -17,11 +17,17 @@ function QuestionCard() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const currentQuestion = questions[currentIndex];
     const [score, setScore] = useState(0);
+    const [isFinished, setFinished] = useState(false);
 
 
     function nextQuestion() {
         setSelectedAnswer(null);
-        setCurrentIndex(currentIndex + 1);
+
+        if(currentIndex + 1 < questions.length) {
+            setCurrentIndex(currentIndex + 1);
+        } else {
+            setFinished(true);
+        }
     }
 
     function handleAnswer(option) {
@@ -32,6 +38,22 @@ function QuestionCard() {
         }
     }
 
+    function restartQuiz() {
+        setCurrentIndex(0);
+        setScore(0);
+        setSelectedAnswer(null);
+        setFinished(false);
+    }
+
+    if(isFinished) {
+        return (
+            <div>
+                <h2>Quiz Finished 🎉</h2>
+                <p>Your score: {score} / {questions.length}</p>
+                <button onClick={restartQuiz}>Restart Quiz</button>
+            </div>
+        )
+    }
     return(
         <div>
             <p>{currentQuestion.question}</p>
@@ -53,10 +75,9 @@ function QuestionCard() {
                 <button onClick={nextQuestion}>Next</button>
             )}
 
-            {currentIndex === questions.length - 1 && selectedAnswer && (
-                <p>Your score: {score} / {questions.length}</p>
+            {currentIndex === questions.length - 1 && (
+                <button onClick={nextQuestion}>Finish</button>
             )}
-            
         </div>
     )
 }
