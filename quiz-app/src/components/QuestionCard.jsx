@@ -1,24 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function QuestionCard() { 
-    const questions = [
-        {
-            question: "Whatt is 2 + 2?",
-            options: ["3", "4", "5", "6"],
-            correctAnswer: "4"
-        },
-        {
-            question: "Whatt is 22 - 16?",
-            options: ["5", "6", "7", "8"],
-            correctAnswer: "6"
-        }
-    ]
+    const [questions, setQuestions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] =useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const currentQuestion = questions[currentIndex];
     const [score, setScore] = useState(0);
     const [isFinished, setFinished] = useState(false);
 
+    useEffect(() => {
+        async function fetchQuestions() {
+            try {
+                const res = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
+                const data = await res.json();
+                const formatted = data.results.map((q) => {
+                    const options = [
+                        ...q.incorrect_answers,
+                        q.correct_answer
+                    ];
+                    options.sort(() => Math.random() - 0.5);
+
+                    return {
+                        question: q.question,
+                        options: options,
+                        correctAnswer: q.correct_answer
+                    };
+                });
+
+                setQuestions(formatted);
+                setLoading(false);
+            } catch (err) {
+                setError("Failed to load quiz questions!");
+                setLoading(false);
+            }
+        }
+
+        fetchQuestions();
+    }, []);
 
     function nextQuestion() {
         setSelectedAnswer(null);
@@ -44,6 +64,9 @@ function QuestionCard() {
         setSelectedAnswer(null);
         setFinished(false);
     }
+
+    if(loading) return <p>Loading quiz...</p>;
+    if(error) return <p>{error}</p>
 
     if(isFinished) {
         return (
