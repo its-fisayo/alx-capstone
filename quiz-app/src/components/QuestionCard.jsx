@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function QuestionCard() { 
     const [questions, setQuestions] = useState([]);
@@ -9,8 +9,12 @@ function QuestionCard() {
     const currentQuestion = questions[currentIndex];
     const [score, setScore] = useState(0);
     const [isFinished, setFinished] = useState(false);
+    const hasFetched = useRef(false);
 
     useEffect(() => {
+        if(hasFetched.current) return;
+        hasFetched.current = true;
+
         async function fetchQuestions() {
             try {
                 const res = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
@@ -79,10 +83,16 @@ function QuestionCard() {
     }
     return(
         <div>
-            <p>{currentQuestion.question}</p>
+            <p dangerouslySetInnerHTML={{ __html: currentQuestion.question}} ></p>
 
             {currentQuestion.options.map((option) => (
-                <button key={option} onClick={() => handleAnswer(option)}>{option}</button>
+                <button
+                    key={option}
+                    onClick={() => handleAnswer(option)}
+                    dangerouslySetInnerHTML={{ __html: option}}
+                    disabled= {selectedAnswer !== null}
+                    >
+                </button>
             ))}
 
             {selectedAnswer && (
