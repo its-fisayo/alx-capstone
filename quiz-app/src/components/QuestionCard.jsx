@@ -10,6 +10,7 @@ function QuestionCard() {
     const [score, setScore] = useState(0);
     const [isFinished, setFinished] = useState(false);
     const hasFetched = useRef(false);
+    const [review, setReview] = useState([]);
 
     useEffect(() => {
         if(hasFetched.current) return;
@@ -17,7 +18,7 @@ function QuestionCard() {
 
         async function fetchQuestions() {
             try {
-                const res = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
+                const res = await fetch("https://opentdb.com/api.php?amount=5&type=multiple");
                 const data = await res.json();
                 const formatted = data.results.map((q) => {
                     const options = [
@@ -57,9 +58,20 @@ function QuestionCard() {
     function handleAnswer(option) {
         setSelectedAnswer(option);
 
-        if(option === currentQuestion.correctAnswer) {
+        const isCorrect = (option === currentQuestion.correctAnswer);
+        if(isCorrect) {
             setScore(score + 1);
         }
+
+        setReview((prev) => [
+            ...prev,
+            {
+                question: currentQuestion.question,
+                selected: option,
+                correct: currentQuestion.correctAnswer,
+                isCorrect: isCorrect
+            }
+        ]);
     }
 
     function restartQuiz() {
@@ -67,6 +79,7 @@ function QuestionCard() {
         setScore(0);
         setSelectedAnswer(null);
         setFinished(false);
+        setReview([]);
     }
 
     if(loading) return <p>Loading quiz...</p>;
@@ -78,6 +91,26 @@ function QuestionCard() {
                 <h2>Quiz Finished 🎉</h2>
                 <p>Your score: {score} / {questions.length}</p>
                 <button onClick={restartQuiz}>Restart Quiz</button>
+
+                <h3>Review</h3>
+                {review.map((item, index) => (
+                    <div key={index}>
+                        <p><strong>Q{index + 1}:</strong>{" "}<span dangerouslySetInnerHTML={{__html: item.question}} /></p>
+                        <p>
+                            Your answer:{" "}
+                            {item.isCorrect ?  (
+                                <span>✔ {" "} <span dangerouslySetInnerHTML={{__html: item.selected}} /></span>
+                            ) : (
+                                <span>❌ {" "} <span dangerouslySetInnerHTML={{__html: item.selected}} /></span>
+                            )}
+                        </p>
+
+                        {!item.isCorrect && (
+                            <p>Correct answer: ✅{" "} <span dangerouslySetInnerHTML={{ __html: item.correct}} /></p>
+                        )}
+                        <hr />
+                    </div>
+                ))}
             </div>
         )
     }
