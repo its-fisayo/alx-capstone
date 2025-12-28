@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 function QuestionCard() { 
     const [questions, setQuestions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] =useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -11,39 +11,53 @@ function QuestionCard() {
     const [isFinished, setFinished] = useState(false);
     const hasFetched = useRef(false);
     const [review, setReview] = useState([]);
+    const [isQuizStarted, setIsQuizStarted] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [questionAmount, setQuestionAmount] = useState(5);
 
     useEffect(() => {
         if(hasFetched.current) return;
         hasFetched.current = true;
 
-        async function fetchQuestions() {
+        async function fetchCategories() {
             try {
-                const res = await fetch("https://opentdb.com/api.php?amount=5&type=multiple");
+                const res = await fetch("https://opentdb.com/api_category.php");
                 const data = await res.json();
-                const formatted = data.results.map((q) => {
-                    const options = [
-                        ...q.incorrect_answers,
-                        q.correct_answer
-                    ];
-                    options.sort(() => Math.random() - 0.5);
-
-                    return {
-                        question: q.question,
-                        options: options,
-                        correctAnswer: q.correct_answer
-                    };
-                });
-
-                setQuestions(formatted);
-                setLoading(false);
+                setCategories(data.trivia_categories);
             } catch (err) {
-                setError("Failed to load quiz questions!");
-                setLoading(false);
+                setError("Failed to load categories")
             }
         }
-
-        fetchQuestions();
+        fetchCategories();
     }, []);
+
+    async function startQuiz() {
+        setLoading(true);
+
+        try {
+            const res = await fetch(`https://opentdb.com/api.php?amount=${questionAmount}&category=${selectedCategory}&type=multiple`);
+            const data = await res.json();
+
+            const formatted = data.results.map((q) => {
+                const options = [...q.incorrect_answers, q.correct_answer];
+                options.sort(() => Math.random() - 0.5);
+
+                return {
+                    question: q.question,
+                    options: options,
+                    correctAnswer: q.correct_answer
+                };
+            });
+
+            setQuestions(formatted);
+            setIsQuizStarted(true);
+            setLoading(false);
+        } catch(err) {
+            setError("Failed to load quiz questions");
+            setLoading(false);
+        }
+    }
 
     function nextQuestion() {
         setSelectedAnswer(null);
@@ -80,6 +94,34 @@ function QuestionCard() {
         setSelectedAnswer(null);
         setFinished(false);
         setReview([]);
+        setIsQuizStarted(false);
+        setQuestions([]);
+    }
+
+    if(!isQuizStarted) {
+        return (
+            <div>
+                <h2>Select a Topic</h2>
+
+                <select value={selectedCategory} onChange={(e) => {setSelectedCategory(e.target.value)}}>
+                    <option value="">-- Choose a category --</option>
+
+                    {categories.map((cat) => (
+                        <option key= {cat.id} value= {cat.id}>{cat.name}</option>
+                    ))}
+                </select>
+                <br /><br />
+
+                <h3>Enter the Number of Questions</h3>
+                <input type="number" value={questionAmount} min={5} max={50} onChange={(e) => setQuestionAmount(Number(e.target.value))}/>
+                    <br /><br />
+
+                <button onClick={startQuiz} disabled={!selectedCategory}>Start Quiz</button>
+
+                {loading && <p>Loading quiz...</p>}
+                {error && <p>{error}</p>}
+            </div>
+        )
     }
 
     if(loading) return <p>Loading quiz...</p>;
@@ -138,11 +180,11 @@ function QuestionCard() {
 
             <br />
             {currentIndex < questions.length - 1 && (
-                <button onClick={nextQuestion}>Next</button>
+                <button onClick={nextQuestion} disabled={!selectedAnswer}>Next</button>
             )}
 
             {currentIndex === questions.length - 1 && (
-                <button onClick={nextQuestion}>Finish</button>
+                <button onClick={nextQuestion} disabled={!selectedAnswer}>Finish</button>
             )}
         </div>
     )
