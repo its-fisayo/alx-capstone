@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import QuizStart from "./QuizStart";
+import ScoreSummary from "./ScoreSummary";
 
 function QuestionCard() { 
     const [questions, setQuestions] = useState([]);
@@ -100,27 +102,16 @@ function QuestionCard() {
 
     if(!isQuizStarted) {
         return (
-            <div>
-                <h2>Select a Topic</h2>
-
-                <select value={selectedCategory} onChange={(e) => {setSelectedCategory(e.target.value)}}>
-                    <option value="">-- Choose a category --</option>
-
-                    {categories.map((cat) => (
-                        <option key= {cat.id} value= {cat.id}>{cat.name}</option>
-                    ))}
-                </select>
-                <br /><br />
-
-                <h3>Enter the Number of Questions</h3>
-                <input type="number" value={questionAmount} min={5} max={50} onChange={(e) => setQuestionAmount(Number(e.target.value))}/>
-                    <br /><br />
-
-                <button onClick={startQuiz} disabled={!selectedCategory}>Start Quiz</button>
-
-                {loading && <p>Loading quiz...</p>}
-                {error && <p>{error}</p>}
-            </div>
+            <QuizStart 
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                questionAmount={questionAmount}
+                setQuestionAmount={setQuestionAmount}
+                startQuiz={startQuiz}
+                loading={loading}
+                error={error}
+            />
         )
     }
 
@@ -129,31 +120,12 @@ function QuestionCard() {
 
     if(isFinished) {
         return (
-            <div>
-                <h2>Quiz Finished 🎉</h2>
-                <p>Your score: {score} / {questions.length}</p>
-                <button onClick={restartQuiz}>Restart Quiz</button>
-
-                <h3>Review</h3>
-                {review.map((item, index) => (
-                    <div key={index}>
-                        <p><strong>Q{index + 1}:</strong>{" "}<span dangerouslySetInnerHTML={{__html: item.question}} /></p>
-                        <p>
-                            Your answer:{" "}
-                            {item.isCorrect ?  (
-                                <span>✔ {" "} <span dangerouslySetInnerHTML={{__html: item.selected}} /></span>
-                            ) : (
-                                <span>❌ {" "} <span dangerouslySetInnerHTML={{__html: item.selected}} /></span>
-                            )}
-                        </p>
-
-                        {!item.isCorrect && (
-                            <p>Correct answer: ✅{" "} <span dangerouslySetInnerHTML={{ __html: item.correct}} /></p>
-                        )}
-                        <hr />
-                    </div>
-                ))}
-            </div>
+            <ScoreSummary
+                questions={questions}
+                restartQuiz={restartQuiz}
+                review={review}
+                score={score}
+            />
         )
     }
     return(
