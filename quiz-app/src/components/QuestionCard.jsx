@@ -17,6 +17,8 @@ function QuestionCard() {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [questionAmount, setQuestionAmount] = useState(5);
+    const [selectedDifficulty, setSelectedDifficulty] = useState("");
+    const difficulties = ["easy", "medium", "hard"];
 
     useEffect(() => {
         if(hasFetched.current) return;
@@ -38,7 +40,7 @@ function QuestionCard() {
         setLoading(true);
 
         try {
-            const res = await fetch(`https://opentdb.com/api.php?amount=${questionAmount}&category=${selectedCategory}&type=multiple`);
+            const res = await fetch(`https://opentdb.com/api.php?amount=${questionAmount}&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`);
             const data = await res.json();
 
             const formatted = data.results.map((q) => {
@@ -111,6 +113,9 @@ function QuestionCard() {
                 startQuiz={startQuiz}
                 loading={loading}
                 error={error}
+                difficulties={difficulties}
+                selectedDifficulty={selectedDifficulty}
+                setSelectedDifficulty={setSelectedDifficulty}
             />
         )
     }
