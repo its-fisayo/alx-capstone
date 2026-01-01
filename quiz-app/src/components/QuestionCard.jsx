@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import QuizStart from "./QuizStart";
 import ScoreSummary from "./ScoreSummary";
+import ProgressBar from "./ProgressBar";
+import QuizHistory from "./QuizHistory";
 
-function QuestionCard() { 
+function QuestionCard({ isQuizStarted, setIsQuizStarted}) { 
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] =useState(null);
@@ -13,12 +15,17 @@ function QuestionCard() {
     const [isFinished, setFinished] = useState(false);
     const hasFetched = useRef(false);
     const [review, setReview] = useState([]);
-    const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [questionAmount, setQuestionAmount] = useState(5);
     const [selectedDifficulty, setSelectedDifficulty] = useState("");
     const difficulties = ["easy", "medium", "hard"];
+    const progress = ((currentIndex + 1) / questions.length) * 100
+    const [history, setHistory] = useState(() => {
+        const saved = localStorage.getItem("quiz-history");
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [showHistory, setShowHistory] = useState(false);
 
     useEffect(() => {
         if(hasFetched.current) return;
@@ -69,6 +76,21 @@ function QuestionCard() {
         if(currentIndex + 1 < questions.length) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            const categoryName = categories.find(c => c.id == selectedCategory)?.name || "Any";
+
+            const quizResult = {
+                date: new Date().toLocaleString(),
+                score: score + (selectedAnswer === currentQuestion.correctAnswer ? 1 : 0),
+                total: questions.length,
+                category: categoryName,
+                difficulty: selectedDifficulty
+            };
+
+            const updateHistory = [...history, quizResult];
+
+            setHistory(updateHistory);
+            localStorage.setItem("quiz-history", JSON.stringify(updateHistory));
+
             setFinished(true);
         }
     }
@@ -102,6 +124,14 @@ function QuestionCard() {
         setQuestions([]);
     }
 
+    if(showHistory) {
+        return (
+            <QuizHistory 
+                history={history}
+                restartQuiz={() => setShowHistory(false)}
+            />
+        )
+    }
     if(!isQuizStarted) {
         return (
             <QuizStart 
@@ -116,6 +146,7 @@ function QuestionCard() {
                 difficulties={difficulties}
                 selectedDifficulty={selectedDifficulty}
                 setSelectedDifficulty={setSelectedDifficulty}
+                setShowHistory={setShowHistory}
             />
         )
     }
@@ -135,6 +166,12 @@ function QuestionCard() {
     }
     return(
         <div>
+            <ProgressBar 
+                progress={progress}
+                currentIndex={currentIndex}
+                questions={questions}
+            />
+
             <p dangerouslySetInnerHTML={{ __html: currentQuestion.question}} ></p>
 
             {currentQuestion.options.map((option) => (

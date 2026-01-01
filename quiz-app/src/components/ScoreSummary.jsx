@@ -5,6 +5,7 @@ function ScoreSummary({questions, restartQuiz, review, score}) {
         <div>
             <h2>Quiz Finished 🎉</h2>
             <p>Your score: {score} / {questions.length}</p>
+            <h1>{`${(score / questions.length) * 100}`}%</h1>
             <button onClick={restartQuiz}>Restart Quiz</button>
 
             <h3>Review</h3>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function QuizStart({categories, selectedCategory, setSelectedCategory, questionAmount, setQuestionAmount, startQuiz, loading, error, difficulties, selectedDifficulty, setSelectedDifficulty}) {
+function QuizStart({categories, selectedCategory, setSelectedCategory, questionAmount, setQuestionAmount, startQuiz, loading, error, difficulties, selectedDifficulty, setSelectedDifficulty, setShowHistory}) {
      return (
         <div>
             <h2>Select a Topic</h2>
@@ -29,6 +29,7 @@ function QuizStart({categories, selectedCategory, setSelectedCategory, questionA
             <br /><br />
 
             <button onClick={startQuiz} disabled={!selectedCategory || !selectedDifficulty || loading}>Start Quiz</button>
+            <button onClick={() => setShowHistory(true)}>View Quiz History</button>
 
             {loading && <p>Loading quiz...</p>}
             {error && <p>{error}</p>}
