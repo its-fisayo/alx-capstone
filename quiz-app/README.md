@@ -1,7 +1,7 @@
-React Quiz App
+# React Quiz App
 A modern, responsive quiz application built with React, Tailwind CSS, and the Open Trivia Database API. Users can select quiz topics, difficulty levels, quiz types, and track their scores. The app also includes search, history tracking, social sharing, and optional dark mode support.
 
-Features
+# Features
 Dynamic Quiz Generation: Fetches questions from Open Trivia Database
  with support for:
     Categories (e.g., Science, Sports)
@@ -15,33 +15,33 @@ Answer Review: Users can see which answers they got correct or wrong.
 Responsive Design: Fully responsive using Tailwind CSS.
 Dark Mode (optional): Improves usability in low-light conditions.
 
-Getting Started
+# Getting Started
 
 Prerequisites
     Node.js v18+
     npm or yarn
 
-Installation
-# Clone the repository
+# Installation
+Clone the repository
 git clone https://github.com/yourusername/react-quiz-app.git
 cd react-quiz-app
 
-# Install dependencies
+Install dependencies
 npm install
-# or
+or
 yarn install
 
-Running the App
-# Start the development server
+# Running the App
+Start the development server
 npm run dev
-# or
+or
 yarn dev
 
 
 Open http://localhost:5173
  to view the app in your browser.
 
-Project Structure
+# Project Structure
 src/
  ├─ components/
  │   ├─ QuestionCard.jsx      # Main quiz logic
@@ -53,7 +53,7 @@ src/
  ├─ main.jsx                  # ReactDOM render
  └─ index.css                 # Tailwind CSS imports & global styles
 
-Usage
+# Usage
 
 Select a quiz category, number of questions, difficulty, and type.
 Search for topics using the search bar if desired.
@@ -62,7 +62,7 @@ Track your progress using the progress bar.
 After finishing, view your score summary, review answers, and share your results.
 Check your quiz history for past attempts.
 
-Acknowledgements
+# Acknowledgements
 
 Open Trivia Database
     for the quiz API
