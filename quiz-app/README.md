@@ -1,16 +1,70 @@
-# React + Vite
+React Quiz App
+A modern, responsive quiz application built with React, Tailwind CSS, and the Open Trivia Database API. Users can select quiz topics, difficulty levels, quiz types, and track their scores. The app also includes search, history tracking, social sharing, and optional dark mode support.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Features
+Dynamic Quiz Generation: Fetches questions from Open Trivia Database
+ with support for:
+    Categories (e.g., Science, Sports)
+    Difficulty levels (Easy, Medium, Hard)
+    Quiz types (Multiple Choice, True/False)
+Searchable Categories: Users can search for quiz topics in real-time.
+Progress Tracking: Shows current question number and a progress bar.
+Score Summary: Displays correct and incorrect answers at the end.
+Quiz History: Stores quiz attempts in localStorage so users can review past results.
+Answer Review: Users can see which answers they got correct or wrong.
+Responsive Design: Fully responsive using Tailwind CSS.
+Dark Mode (optional): Improves usability in low-light conditions.
 
-Currently, two official plugins are available:
+Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Prerequisites
+    Node.js v18+
+    npm or yarn
 
-## React Compiler
+Installation
+# Clone the repository
+git clone https://github.com/yourusername/react-quiz-app.git
+cd react-quiz-app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Install dependencies
+npm install
+# or
+yarn install
 
-## Expanding the ESLint configuration
+Running the App
+# Start the development server
+npm run dev
+# or
+yarn dev
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+Open http://localhost:5173
+ to view the app in your browser.
+
+Project Structure
+src/
+ ├─ components/
+ │   ├─ QuestionCard.jsx      # Main quiz logic
+ │   ├─ QuizStart.jsx         # Quiz selection & search
+ │   ├─ ScoreSummary.jsx      # Quiz results
+ │   ├─ ProgressBar.jsx       # Progress bar for quiz
+ │   └─ QuizHistory.jsx       # Review past quizzes
+ ├─ App.jsx                   # Main app entry
+ ├─ main.jsx                  # ReactDOM render
+ └─ index.css                 # Tailwind CSS imports & global styles
+
+Usage
+
+Select a quiz category, number of questions, difficulty, and type.
+Search for topics using the search bar if desired.
+Answer each question; correct/incorrect feedback is shown immediately.
+Track your progress using the progress bar.
+After finishing, view your score summary, review answers, and share your results.
+Check your quiz history for past attempts.
+
+Acknowledgements
+
+Open Trivia Database
+    for the quiz API
+React
+Tailwind CSS
