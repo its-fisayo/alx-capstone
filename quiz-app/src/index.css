@@ -63,7 +63,7 @@ button:disabled {
   color: rgba(26, 26, 26, 0.3);
 }
 
-select, input {
+select {
   border: 1px solid black;
   border-radius: 5px;
   width: 100%;
@@ -71,7 +71,7 @@ select, input {
 
 input {
   padding-left: 5px;
-  width: 50px;
+  border: 1px solid black;
 }
 @media (prefers-color-scheme: light) {
   :root {

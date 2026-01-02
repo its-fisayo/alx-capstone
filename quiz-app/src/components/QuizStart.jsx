@@ -1,10 +1,22 @@
 import React from "react";
 
-function QuizStart({categories, selectedCategory, setSelectedCategory, questionAmount, setQuestionAmount, startQuiz, loading, error, difficulties, selectedDifficulty, setSelectedDifficulty, setShowHistory, quizTypes, selectedType, setSelectedType}) {
+function QuizStart({categories, selectedCategory, setSelectedCategory, questionAmount, setQuestionAmount, startQuiz, loading, error, difficulties, selectedDifficulty, setSelectedDifficulty, setShowHistory, quizTypes, selectedType, setSelectedType, searchItem, setSearchItem}) {
      return (
         <div className="w-full my-0">
-            <h2><b>Select a Topic</b></h2>
+            <div className="flex justify-between">
+                <h2><b>Select a Topic</b></h2>
+                <input
+                    type="text"
+                    placeholder="Search categories..."
+                    value={searchItem}
+                    onChange={(e) => {setSearchItem(e.target.value)}}
+                    className="w-40 p-2 border rounded-full mb-3 h-7"
+                />
+            </div>
 
+            {searchItem && categories.length === 0 && (
+                <p className="text-red-500">No categories match your search.</p>
+            )}
             <select value={selectedCategory} onChange={(e) => {setSelectedCategory(e.target.value)}}>
                 <option value="">-- Choose a category --</option>
 
@@ -15,7 +27,7 @@ function QuizStart({categories, selectedCategory, setSelectedCategory, questionA
             <br /><br />
 
             <h3><b>Enter the Number of Questions</b></h3>
-            <input type="number" value={questionAmount} min={5} max={50} onChange={(e) => setQuestionAmount(Number(e.target.value))}/>
+            <input type="number" value={questionAmount} min={5} max={50} onChange={(e) => setQuestionAmount(Number(e.target.value))} className="rounded-md w-15"/>
             <br /><br />
 
             <h3><b>Select a Difficulty Level</b></h3>

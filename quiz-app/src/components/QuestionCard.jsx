@@ -28,6 +28,10 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted, showHistory, setShowHis
     const quizTypes = ["Multiple Choice", "True/False"];
     const [selectedType, setSelectedType] = useState("");
     const chosenType = selectedType === "Multiple Choice" ? "multiple" : selectedType === "True/False" ? "boolean" : "";
+    const [searchItem, setSearchItem] = useState("");
+    const filteredCategories = categories.filter(cat => 
+        cat?.name?.toLowerCase().includes(searchItem.toLowerCase())
+    )
 
 
 
@@ -140,7 +144,7 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted, showHistory, setShowHis
     if(!isQuizStarted) {
         return (
             <QuizStart 
-                categories={categories}
+                categories={filteredCategories}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 questionAmount={questionAmount}
@@ -155,6 +159,8 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted, showHistory, setShowHis
                 quizTypes={quizTypes}
                 selectedType={selectedType}
                 setSelectedType={setSelectedType}
+                searchItem={searchItem}
+                setSearchItem={setSearchItem}
             />
         )
     }
