@@ -7,10 +7,11 @@ function ScoreSummary({questions, restartQuiz, review, score}) {
             <p>Your score: {score} / {questions.length}</p>
             <h1>{`${(score / questions.length) * 100}`}%</h1>
             <button onClick={restartQuiz}>Restart Quiz</button>
+            <br /><br />
 
-            <h2 className="text-xl"><b>Review</b></h2>
+            <h2 className="text-2xl pb-5"><b>Review</b></h2>
             {review.map((item, index) => (
-                <div key={index}>
+                <div key={index} className="pb-5">
                     <p><strong>Q{index + 1}:</strong>{" "}<span dangerouslySetInnerHTML={{__html: item.question}} /></p>
                     <p>
                         Your answer:{" "}
