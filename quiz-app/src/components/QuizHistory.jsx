@@ -11,15 +11,16 @@ function QuizHistory({ history, restartQuiz}) {
     }
 
     return (
-        <div>
-            <h2>Quiz History</h2>
-
+        <div className="w-full sm:">
+            <h1>Quiz History</h1>
+            <br /><br />
             {history.map((item, index) => (
-                <div key={index}>
+                <div key={index} className="pb-5">
                     <p>{item.date}</p>
                     <p>Score: {item.score} / {item.total}</p>
                     <p>Category: {item.category || "Any"}</p>
                     <p>Difficulty: {item.difficulty}</p>
+                    <p>Type: {item.type}</p>
                     <hr />
                 </div>
             ))}

@@ -2,13 +2,13 @@ import React from "react"
 
 function ScoreSummary({questions, restartQuiz, review, score}) {
     return (
-        <div>
-            <h2>Quiz Finished 🎉</h2>
+        <div className="">
+            <h1>Quiz Finished</h1>
             <p>Your score: {score} / {questions.length}</p>
             <h1>{`${(score / questions.length) * 100}`}%</h1>
             <button onClick={restartQuiz}>Restart Quiz</button>
 
-            <h3>Review</h3>
+            <h2 className="text-xl"><b>Review</b></h2>
             {review.map((item, index) => (
                 <div key={index}>
                     <p><strong>Q{index + 1}:</strong>{" "}<span dangerouslySetInnerHTML={{__html: item.question}} /></p>

@@ -4,7 +4,7 @@ import ScoreSummary from "./ScoreSummary";
 import ProgressBar from "./ProgressBar";
 import QuizHistory from "./QuizHistory";
 
-function QuestionCard({ isQuizStarted, setIsQuizStarted}) { 
+function QuestionCard({ isQuizStarted, setIsQuizStarted, showHistory, setShowHistory}) { 
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] =useState(null);
@@ -25,7 +25,11 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
         const saved = localStorage.getItem("quiz-history");
         return saved ? JSON.parse(saved) : [];
     });
-    const [showHistory, setShowHistory] = useState(false);
+    const quizTypes = ["Multiple Choice", "True/False"];
+    const [selectedType, setSelectedType] = useState("");
+    const chosenType = selectedType === "Multiple Choice" ? "multiple" : selectedType === "True/False" ? "boolean" : "";
+
+
 
     useEffect(() => {
         if(hasFetched.current) return;
@@ -47,7 +51,7 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
         setLoading(true);
 
         try {
-            const res = await fetch(`https://opentdb.com/api.php?amount=${questionAmount}&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`);
+            const res = await fetch(`https://opentdb.com/api.php?amount=${questionAmount}&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=${chosenType}`);
             const data = await res.json();
 
             const formatted = data.results.map((q) => {
@@ -83,7 +87,8 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
                 score: score + (selectedAnswer === currentQuestion.correctAnswer ? 1 : 0),
                 total: questions.length,
                 category: categoryName,
-                difficulty: selectedDifficulty
+                difficulty: selectedDifficulty,
+                type: selectedType
             };
 
             const updateHistory = [...history, quizResult];
@@ -147,6 +152,9 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
                 selectedDifficulty={selectedDifficulty}
                 setSelectedDifficulty={setSelectedDifficulty}
                 setShowHistory={setShowHistory}
+                quizTypes={quizTypes}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
             />
         )
     }
@@ -165,14 +173,20 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
         )
     }
     return(
-        <div>
+        <div className="w-full h-100 flex flex-col justify-between">
+            <div>
             <ProgressBar 
                 progress={progress}
                 currentIndex={currentIndex}
                 questions={questions}
             />
+            </div>
 
+            <div className="flex flex-col justify-between h-full">
+                <div className="flex flex-col">
+                    <div className="h-20">
             <p dangerouslySetInnerHTML={{ __html: currentQuestion.question}} ></p>
+                    </div>
 
             {currentQuestion.options.map((option) => (
                 <button
@@ -180,19 +194,13 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
                     onClick={() => handleAnswer(option)}
                     dangerouslySetInnerHTML={{ __html: option}}
                     disabled= {selectedAnswer !== null}
+                    style={selectedAnswer === option ? (selectedAnswer === currentQuestion.correctAnswer ? {backgroundColor: "rgba(100, 255, 100, 0.5)", textAlign:"left", color:"black"} : {backgroundColor: "rgba(255, 100, 100, 0.5)", textAlign:"left", color:"black"}): {backgroundColor: "white", textAlign:"left"}}
                     >
                 </button>
             ))}
+            </div>
 
-            {selectedAnswer && (
-                <p>
-                    {selectedAnswer === currentQuestion.correctAnswer
-                    ? "Correct ✅"
-                    : "Wrong ❌"}
-                </p>
-            )}
-
-            <br />
+            <div>
             {currentIndex < questions.length - 1 && (
                 <button onClick={nextQuestion} disabled={!selectedAnswer}>Next</button>
             )}
@@ -200,6 +208,8 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted}) {
             {currentIndex === questions.length - 1 && (
                 <button onClick={nextQuestion} disabled={!selectedAnswer}>Finish</button>
             )}
+            </div>
+            </div>
         </div>
     )
 }
