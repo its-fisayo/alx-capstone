@@ -200,19 +200,19 @@ function QuestionCard({ isQuizStarted, setIsQuizStarted, showHistory, setShowHis
                     onClick={() => handleAnswer(option)}
                     dangerouslySetInnerHTML={{ __html: option}}
                     disabled= {selectedAnswer !== null}
-                    style={selectedAnswer === option ? (selectedAnswer === currentQuestion.correctAnswer ? {backgroundColor: "rgba(100, 255, 100, 0.5)", textAlign:"left", color:"black"} : {backgroundColor: "rgba(255, 100, 100, 0.5)", textAlign:"left", color:"black"}): {backgroundColor: "white", textAlign:"left"}}
-                    >
+                    style={option === selectedAnswer ? (selectedAnswer === currentQuestion.correctAnswer ? {backgroundColor: "rgba(100, 255, 100, 0.5)", color:"black"} : {backgroundColor: "rgba(255, 100, 100, 0.5)", color:"black"}) : undefined}
+                    className="text-left">
                 </button>
             ))}
             </div>
 
             <div>
             {currentIndex < questions.length - 1 && (
-                <button onClick={nextQuestion} disabled={!selectedAnswer}>Next</button>
+                <button onClick={nextQuestion} disabled={!selectedAnswer} className="button-shadow">Next</button>
             )}
 
             {currentIndex === questions.length - 1 && (
-                <button onClick={nextQuestion} disabled={!selectedAnswer}>Finish</button>
+                <button onClick={nextQuestion} disabled={!selectedAnswer} className="button-shadow">Finish</button>
             )}
             </div>
             </div>

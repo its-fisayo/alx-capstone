@@ -31,7 +31,7 @@ body {
   width: 98.8vw;
   min-width: 320px;
   min-height: 100vh;
-  background-color: rgba(220, 220, 220, 0.8);
+  background-color: rgba(180, 180, 180, 0.8);
 }
 
 h1 {
@@ -62,6 +62,9 @@ button:focus-visible {
 button:disabled {
   color: rgba(26, 26, 26, 0.3);
 }
+.button-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
 select {
   border: 1px solid black;
@@ -72,6 +75,7 @@ select {
 input {
   padding-left: 5px;
   border: 1px solid black;
+  border-radius: 5px;
 }
 @media (prefers-color-scheme: light) {
   :root {
@@ -83,5 +87,14 @@ input {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: rgb(6, 6, 6);
+  }
+  button:disabled {
+    color: rgba(229, 229, 229, 0.3)
   }
 }
