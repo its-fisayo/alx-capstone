@@ -5,7 +5,7 @@ function QuizHistory({ history, restartQuiz}) {
         return (
             <div>
                 <h2>No quiz history yet</h2>
-                <button onClick={restartQuiz}>Back</button>
+                <button onClick={restartQuiz} className="button-shadow">Back</button>
             </div>
         );
     }
